@@ -1,0 +1,42 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: update APT Cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 600
+      register: result
+      until: result is succeeded
+      when: ansible_os_family == 'Debian'
+      tags:
+        - molecule-idempotence-notest
+
+    - name: Run the equivalent of "pacman -Sy" as a separate step
+      community.general.pacman:
+        update_cache: yes
+      when: ansible_os_family == 'Archlinux'
+      tags:
+        - molecule-idempotence-notest
+
+    - name: Deploy SSH-Keys to remote host
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJalOxUjdPZ71xxMnv1Kvi4CuxoA02XtPli/UM4Li/nL michael@eifel"
+        - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKQ8jd7nJbYSs1ErDmrKI1QU9g4ddXQjxar0f3ScigHI Molecule"
+      tags:
+        - molecule-idempotence-notest
+
+    - name: set ansible_user
+      ansible.builtin.set_fact:
+        ansible_user: "{{ansible_env.USER}}"
+
+  tasks:
+    - name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      include_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
