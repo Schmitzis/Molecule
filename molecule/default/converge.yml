@@ -2,7 +2,6 @@
 - name: Converge
   hosts: all
   become: true
-  remote_user: root
 
   pre_tasks:
     - name: update APT Cache
