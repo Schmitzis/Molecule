@@ -31,6 +31,10 @@ provisioner:
       stdout_callback: yaml
     diff:
       always: true
+  inventory:
+    host_vars:
+      ${CI_HOSTNAME}-${CI_PROJECT_NAME_MOLECULE}-${CI_JOB_ID}:
+        ansible_user: root
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
   log: True
