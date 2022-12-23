@@ -12,9 +12,6 @@ platforms:
       - 1.1.1.1
       - 8.8.8.8
     privileged: true
-    tmpfs:
-      - /run
-      - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
@@ -27,14 +24,10 @@ provisioner:
       fact_caching: jsonfile
       fact_caching_connection: '/tmp'
       host_key_checking: false
-      remote_tmp: '/root/'
+      remote_tmp: '/tmp/.ansible-${USER}/tmp'
       stdout_callback: yaml
     diff:
       always: true
-  inventory:
-    host_vars:
-      ${CI_HOSTNAME}-${CI_PROJECT_NAME_MOLECULE}-${CI_JOB_ID}:
-        ansible_user: root
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
   log: True
