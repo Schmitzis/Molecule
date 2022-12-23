@@ -27,7 +27,7 @@ provisioner:
       fact_caching: jsonfile
       fact_caching_connection: '/tmp'
       host_key_checking: false
-      remote_tmp: '/tmp/.ansible-${USER}/tmp'
+      remote_tmp: '/tmp/'
       stdout_callback: yaml
     diff:
       always: true
