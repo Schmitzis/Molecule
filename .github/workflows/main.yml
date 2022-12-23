@@ -55,6 +55,7 @@ jobs:
         env:
           ANSIBLE_FORCE_COLOR: '1'
           ANSIBLE_VERBOSITY: '2'
+          ANSIBLE_REMOTE_USER: 'root'
           CI_JOB_ID: "${{ github.run_id }}"
           MOLECULE_DEBUG: '1'
           MOLECULE_DISTRO: "${{ matrix.image }}"
